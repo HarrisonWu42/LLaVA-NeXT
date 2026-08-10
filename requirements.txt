@@ -1,3 +1,10 @@
+# LEGACY ENVIRONMENT SNAPSHOT
+#
+# This file reproduces the original LLaVA-NeXT development environment and
+# intentionally pins old Torch, Transformers, Tokenizers, and PEFT versions.
+# Do not install it into an existing ms-swift environment. Use the `ms-swift`
+# extra and docs/INSTALL_MS_SWIFT.md for the current shared-stack workflow.
+
 Babel==2.14.0
 DataProperty==1.0.1
 Deprecated==1.2.14

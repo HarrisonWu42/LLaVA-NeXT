@@ -206,13 +206,13 @@ class LlavaMetaForCausalLM(ABC):
             
             feat = self.get_model().mm_projector(feat)
             faster_video_feature = 0
-            slower_img_feat = 0
+            slower_img_feat = None
             if idx in video_idx_in_batch and cur_mm_spatial_pool_stride > 1:
                 slower_img_feat = self.get_2dPool(feat,cur_mm_spatial_pool_stride)
                 if self.config.add_faster_video:
                     cur_mm_spatial_pool_stride = cur_mm_spatial_pool_stride * 2
                     faster_video_feature = self.get_2dPool(feat,cur_mm_spatial_pool_stride)
-            if slower_img_feat is not 0:
+            if slower_img_feat is not None:
                 all_videos_or_images_features.append(slower_img_feat)
             else:
                 all_videos_or_images_features.append(feat)
@@ -256,6 +256,14 @@ class LlavaMetaForCausalLM(ABC):
 
         if isinstance(modalities, str):
             modalities = [modalities]
+        else:
+            modalities = list(modalities)
+
+        batch_size = input_ids.shape[0]
+        if len(modalities) == 1 and batch_size > 1:
+            modalities = modalities * batch_size
+        elif len(modalities) != batch_size:
+            raise ValueError(f"Expected one modality per batch item, but got {len(modalities)} modalities for batch size {batch_size}.")
 
         # import pdb; pdb.set_trace()
         if type(images) is list or images.ndim == 5:

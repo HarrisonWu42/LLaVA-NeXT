@@ -24,7 +24,9 @@ standalone = [
     "ftfy",
 ]
 
-
+# Frozen upstream training stack. Keep this extra for reproducing legacy runs,
+# but install it only in a dedicated environment; it intentionally pins old
+# Torch, Transformers, Tokenizers, and PEFT releases.
 train = [
     "llava[standalone]",
     "numpy==1.26.1",
@@ -61,12 +63,38 @@ train = [
     "scipy",
 ]
 
+# Compatibility profile for an existing ms-swift 4.4 environment. The bounds
+# include the validated shared stack (Python 3.10, Torch 2.8, Transformers
+# 4.57, and PEFT 0.19) and deliberately omit optional compiled packages such
+# as flash-attn, DeepSpeed, and bitsandbytes.
+ms-swift = [
+    "shortuuid>=1,<2",
+    "ftfy>=6,<7",
+    "requests>=2,<3",
+    "torch>=2.8,<2.9",
+    "torchvision>=0.23,<0.24",
+    "transformers>=4.57,<4.58",
+    "tokenizers>=0.22,<0.23",
+    "accelerate>=1.14,<2",
+    "peft>=0.19,<0.20",
+    "trl>=0.15,<1.0",
+    "sentencepiece>=0.2,<0.3",
+    "einops>=0.8,<0.9",
+    "einops-exts>=0.0.4,<0.1",
+    "scikit-learn>=1.7,<2",
+    "timm>=1,<2",
+    "av>=15,<16",
+    "decord>=0.6,<0.7",
+]
+
 [project.urls]
 "Homepage" = "https://llava-vl.github.io"
 "Bug Tracker" = "https://github.com/haotian-liu/LLaVA/issues"
 
 [tool.setuptools.packages.find]
-include = ["llava*", "trl*"]
+# Do not expose the vendored legacy TRL package from editable/current installs.
+# ms-swift requires its own newer TRL release.
+include = ["llava", "llava.*"]
 exclude = [
     "assets*",
     "benchmark*",

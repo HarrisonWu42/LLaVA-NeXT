@@ -118,12 +118,32 @@ git clone https://github.com/LLaVA-VL/LLaVA-NeXT
 cd LLaVA-NeXT
 ```
 
-#### 2. **Install the inference package:**
+#### 2. **Choose an installation profile:**
+
+For an existing ms-swift environment, first use the companion ms-swift 4.4
+checkout containing the `llava_onevision_qwen` loader. Then preserve its Torch,
+Transformers, and PEFT versions while registering this source tree without
+dependency resolution:
+
 ```bash
-conda create -n llava python=3.10 -y
-conda activate llava
-pip install --upgrade pip  # Enable PEP 660 support.
-pip install -e ".[train]"
+python -m pip install --no-deps "shortuuid>=1,<2" "einops-exts>=0.0.4,<0.1" "ftfy>=6,<7"
+python -m pip install -e . --no-deps
+python scripts/check_ms_swift_environment.py
+```
+
+See [the ms-swift installation guide](docs/INSTALL_MS_SWIFT.md) for the
+validated current-stack versions, the `ms-swift` optional extra, PEFT/QLoRA
+notes, verification commands, and the original-checkpoint route's current
+single-image-per-sample limitation.
+
+The historical `train` extra and `requirements.txt` intentionally pin old
+Torch, Transformers, Tokenizers, and PEFT releases. Use them only for legacy
+reproduction in a separate environment:
+
+```bash
+conda create -n llava-legacy python=3.10 -y
+conda activate llava-legacy
+python -m pip install -e ".[train]"
 ```
 
 ### Project Navigation

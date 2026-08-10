@@ -30,7 +30,7 @@ We recommend to follow the [tutorial](./LLaVA_OneVision_Tutorials.ipynb) to get 
 
 ## Evaluation Guidance
 
-We use the [lmms-eval](https://github.com/EvolvingLMMs-Lab/lmms-eval) toolkit to evaluate our models. Ensure you have installed the LLaVA-NeXT model files as per the instructions in the main README.md.
+We use the [lmms-eval](https://github.com/EvolvingLMMs-Lab/lmms-eval) toolkit to evaluate our models. Ensure you have installed the LLaVA-NeXT model files as per the instructions in the main README.md. When sharing an environment with ms-swift, use the [current-stack installation guide](INSTALL_MS_SWIFT.md) instead of the legacy `train` extra.
 
 Install lmms-eval:
 
@@ -42,7 +42,7 @@ Our models' evaluation results can be fully reproduced using the lmms-eval toolk
 
 Note: These commands require flash-attn. If you prefer not to install it, disable flash-attn by adding `attn_implementation=None` to the `--model_args` parameter.
 
-Important: Different torch versions may cause slight variations in results. By default in `lmms-eval`, the requirement for torch version is set to the latest version. In `llava` repo, the torch version is set to `2.1.2`. Torch version `2.1.2` would be stable for both `llava` and `lmms-eval`
+Important: Different torch versions may cause slight variations in results. Torch 2.1.2 belongs to the frozen legacy reproduction profile; do not downgrade a working ms-swift environment to it. The current-stack profile is documented and checked separately in [INSTALL_MS_SWIFT.md](INSTALL_MS_SWIFT.md).
 
 ### Evaluating LLaVA-OneVision on multiple datasets
 

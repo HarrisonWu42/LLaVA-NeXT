@@ -1,5 +1,7 @@
 import os
 
+STRICT_MODEL_IMPORTS = os.environ.get("LLAVA_STRICT_MODEL_IMPORTS", "").lower() in {"1", "true", "yes"}
+
 AVAILABLE_MODELS = {
     "llava_llama": "LlavaLlamaForCausalLM, LlavaConfig",
     "llava_qwen": "LlavaQwenForCausalLM, LlavaQwenConfig",
@@ -13,4 +15,6 @@ for model_name, model_classes in AVAILABLE_MODELS.items():
     try:
         exec(f"from .language_model.{model_name} import {model_classes}")
     except Exception as e:
-        print(f"Failed to import {model_name} from llava.language_model.{model_name}. Error: {e}")
+        if STRICT_MODEL_IMPORTS:
+            raise ImportError(f"Failed to import {model_name} from llava.model.language_model.{model_name}") from e
+        print(f"Failed to import {model_name} from llava.model.language_model.{model_name}. Error: {e}")

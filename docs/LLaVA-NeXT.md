@@ -1,7 +1,7 @@
 # LLaVA-NeXT: Stronger LLMs Supercharge Multimodal Capabilities in the Wild
 
 ## Quick Start With HuggingFace
-First please install our repo with code and environments: `pip install git+https://github.com/LLaVA-VL/LLaVA-NeXT.git`
+First install this repository. For an existing ms-swift environment, follow [INSTALL_MS_SWIFT.md](INSTALL_MS_SWIFT.md) so that installing LLaVA-NeXT does not replace the environment's Torch, Transformers, or PEFT versions. The historical `train` extra is only for a separate legacy reproduction environment.
 
 Here is a quick inference code using [`llavanext-llama3-8B`](https://huggingface.co/lmms-lab/llama3-llava-next-8b) as an example. You will need to install [`flash-attn`](https://github.com/Dao-AILab/flash-attention) to use this code snippet. If you don't want to install it, you can set `attn_implementation=None` when load_pretrained_model
 ```python

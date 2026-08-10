@@ -36,12 +36,23 @@ from transformers.modeling_outputs import (
     SequenceClassifierOutput,
     TokenClassifierOutput,
 )
-from transformers.modeling_utils import (
-    PreTrainedModel,
-    apply_chunking_to_forward,
-    find_pruneable_heads_and_indices,
-    prune_linear_layer,
-)
+from transformers.modeling_utils import PreTrainedModel
+
+# These helpers moved from modeling_utils to pytorch_utils in newer
+# Transformers releases. Prefer the public location used by the current
+# ms-swift stack, while keeping the legacy LLaVA environment importable.
+try:
+    from transformers.pytorch_utils import (
+        apply_chunking_to_forward,
+        find_pruneable_heads_and_indices,
+        prune_linear_layer,
+    )
+except ImportError:  # Transformers versions used by the legacy environment.
+    from transformers.modeling_utils import (
+        apply_chunking_to_forward,
+        find_pruneable_heads_and_indices,
+        prune_linear_layer,
+    )
 from transformers.utils import logging
 from transformers.models.bert.configuration_bert import BertConfig
 
