@@ -101,6 +101,82 @@ class CurrentEnvironmentPackagingTest(unittest.TestCase):
         self.assertFalse(any(fnmatch.fnmatchcase("trl", pattern) for pattern in include_patterns))
 
 
+class ConversationTokenizerSourceTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        conversation_path = REPOSITORY_ROOT / "llava" / "conversation.py"
+        cls.tree = ast.parse(conversation_path.read_text(encoding="utf-8"), filename=str(conversation_path))
+
+    @classmethod
+    def conversation_call(cls, variable_name):
+        assignment = next(
+            node
+            for node in cls.tree.body
+            if isinstance(node, ast.Assign)
+            and any(isinstance(target, ast.Name) and target.id == variable_name for target in node.targets)
+        )
+        return assignment.value
+
+    def test_conversation_import_has_no_eager_tokenizer_loading(self):
+        transformer_imports = [
+            node
+            for node in ast.walk(self.tree)
+            if isinstance(node, ast.ImportFrom) and node.module == "transformers"
+        ]
+        from_pretrained_calls = [
+            node
+            for node in ast.walk(self.tree)
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr == "from_pretrained"
+        ]
+
+        self.assertFalse(transformer_imports)
+        self.assertFalse(from_pretrained_calls)
+
+    def test_llama3_template_is_kept_with_an_explicit_none_tokenizer(self):
+        llama3_call = self.conversation_call("conv_llava_llama_3")
+        keywords = {keyword.arg: keyword.value for keyword in llama3_call.keywords}
+
+        self.assertEqual(ast.literal_eval(keywords["tokenizer_id"]), "meta-llama/Meta-Llama-3-8B-Instruct")
+        self.assertIsNone(ast.literal_eval(keywords["tokenizer"]))
+
+    def test_llama3_missing_tokenizer_error_explains_how_to_inject_it(self):
+        get_prompt = next(
+            node
+            for node in ast.walk(self.tree)
+            if isinstance(node, ast.FunctionDef) and node.name == "get_prompt"
+        )
+        missing_tokenizer_guard = next(
+            node
+            for node in ast.walk(get_prompt)
+            if isinstance(node, ast.If) and ast.unparse(node.test) == "self.tokenizer is None"
+        )
+        error = next(node for node in ast.walk(missing_tokenizer_guard) if isinstance(node, ast.Raise))
+        message = ast.literal_eval(error.exc.args[0])
+
+        self.assertIn("conversation.tokenizer", message)
+        self.assertIn("get_prompt", message)
+        self.assertNotIn("permissions", message.lower())
+
+    def test_qwen_1_5_template_does_not_depend_on_a_tokenizer(self):
+        qwen_call = self.conversation_call("conv_qwen")
+        self.assertNotIn("tokenizer", {keyword.arg for keyword in qwen_call.keywords})
+
+        registry_assignment = next(
+            node
+            for node in self.tree.body
+            if isinstance(node, ast.Assign)
+            and any(isinstance(target, ast.Name) and target.id == "conv_templates" for target in node.targets)
+        )
+        registry = {
+            ast.literal_eval(key): value.id
+            for key, value in zip(registry_assignment.value.keys, registry_assignment.value.values)
+            if isinstance(key, ast.Constant) and isinstance(value, ast.Name)
+        }
+        self.assertEqual(registry["qwen_1_5"], "conv_qwen")
+
+
 class SigLipListForwardSourceTest(unittest.TestCase):
     def test_list_branch_checks_each_feature_tensor(self):
         encoder_path = REPOSITORY_ROOT / "llava" / "model" / "multimodal_encoder" / "siglip_encoder.py"
