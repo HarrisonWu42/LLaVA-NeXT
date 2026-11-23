@@ -1,5 +1,10 @@
 # LLaVA OneVision
 
+> **OmniSpeed users:** use the parent repository's pinned submodules and
+> [installation guide](https://github.com/EIT-NLP/OmniSpeed/blob/main/docs/guides/installation.md).
+> The upstream inference/evaluation examples below describe a separate workflow;
+> do not replace OmniSpeed's pinned lmms-eval with the upstream install command.
+
 ## Model Details
 
 LLaVA OneVision is a multi-modal model capable of processing images, text, image-text interleaved inputs, and videos. The model is trained in multiple stages:
@@ -30,7 +35,7 @@ We recommend to follow the [tutorial](./LLaVA_OneVision_Tutorials.ipynb) to get 
 
 ## Evaluation Guidance
 
-We use the [lmms-eval](https://github.com/EvolvingLMMs-Lab/lmms-eval) toolkit to evaluate our models. Ensure you have installed the LLaVA-NeXT model files as per the instructions in the main README.md. When sharing an environment with ms-swift, use the [current-stack installation guide](INSTALL_MS_SWIFT.md) instead of the legacy `train` extra.
+We use the [lmms-eval](https://github.com/EvolvingLMMs-Lab/lmms-eval) toolkit to evaluate our models. Ensure you have installed the LLaVA-NeXT model files as per the instructions in the main README.md. When sharing an environment with ms-swift, use the [shared-environment compatibility guide](INSTALL_MS_SWIFT.md) instead of the legacy `train` extra.
 
 Install lmms-eval:
 
@@ -42,7 +47,7 @@ Our models' evaluation results can be fully reproduced using the lmms-eval toolk
 
 Note: These commands require flash-attn. If you prefer not to install it, disable flash-attn by adding `attn_implementation=None` to the `--model_args` parameter.
 
-Important: Different torch versions may cause slight variations in results. Torch 2.1.2 belongs to the frozen legacy reproduction profile; do not downgrade a working ms-swift environment to it. The current-stack profile is documented and checked separately in [INSTALL_MS_SWIFT.md](INSTALL_MS_SWIFT.md).
+Important: Different torch versions may cause slight variations in results. Torch 2.1.2 belongs to the frozen legacy reproduction profile; do not downgrade a working ms-swift environment to it. The historical shared-environment profile is documented separately in [INSTALL_MS_SWIFT.md](INSTALL_MS_SWIFT.md).
 
 ### Evaluating LLaVA-OneVision on multiple datasets
 

@@ -1,5 +1,10 @@
 # LLaVA-NeXT: Stronger LLMs Supercharge Multimodal Capabilities in the Wild
 
+> **OmniSpeed users:** use the parent repository's pinned submodules and
+> [installation guide](https://github.com/EIT-NLP/OmniSpeed/blob/main/docs/guides/installation.md).
+> The upstream inference/evaluation examples below describe a separate workflow;
+> do not replace OmniSpeed's pinned lmms-eval with the upstream install command.
+
 ## Quick Start With HuggingFace
 First install this repository. For an existing ms-swift environment, follow [INSTALL_MS_SWIFT.md](INSTALL_MS_SWIFT.md) so that installing LLaVA-NeXT does not replace the environment's Torch, Transformers, or PEFT versions. The historical `train` extra is only for a separate legacy reproduction environment.
 

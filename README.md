@@ -1,3 +1,40 @@
+# LLaVA-NeXT for OmniSpeed
+
+This fork supplies the original LLaVA-OneVision model source used by
+[OmniSpeed](https://github.com/EIT-NLP/OmniSpeed). It is based on upstream commit
+`bce12e479bc4dfee2b9c50c88137b01ff51bd483`; adaptations are maintained on this fork's
+`main` branch. Use the exact submodule commit pinned by your OmniSpeed checkout.
+
+## What this fork adds
+
+- Dependency, model and vision-module compatibility fixes for the ms-swift integration.
+- An ms-swift installation profile, compatibility checks and source regression tests.
+- Removal of eager Llama-3 tokenizer loading during import.
+
+## Use with OmniSpeed
+
+Run from the **OmniSpeed repository root**, not this submodule:
+
+```bash
+git submodule update --init --recursive
+bash scripts/setup/install.sh OmniSpeed
+conda activate OmniSpeed
+```
+
+Follow the [OmniSpeed installation guide](https://github.com/EIT-NLP/OmniSpeed/blob/main/docs/guides/installation.md)
+for its Linux/Python 3.11 environment. The [shared-environment guide](docs/INSTALL_MS_SWIFT.md)
+below records a separate historical compatibility profile; it does not replace the main installer.
+Original-checkpoint training uses the companion ms-swift fork and supports exactly one image per sample.
+
+## Upstream documentation and installation notes
+
+The upstream project description, authorship and citations are retained below, together
+with this fork's installation amendments. The [license](LICENSE) is retained.
+Upstream release notes and legacy training examples describe the upstream project;
+OmniSpeed training uses ms-swift and the main repository's guides.
+
+---
+
 <p align="center" width="100%">
 <img src="https://i.postimg.cc/pL17YtG4/WX20240508-220230-2x.png"  width="80%" height="80%">
 </p>
@@ -112,9 +149,13 @@
 
 ### Installation
 
-#### 1. **Clone this repository and navigate to the LLaVA folder:**
+For OmniSpeed, use the pinned submodule and installer above. The standalone
+commands below obtain this fork's compatibility changes; a branch checkout is
+not a substitute for recording the exact commit used in an experiment.
+
+#### 1. **Clone this fork and navigate to the LLaVA folder:**
 ```bash
-git clone https://github.com/LLaVA-VL/LLaVA-NeXT
+git clone --branch main https://github.com/HarrisonWu42/LLaVA-NeXT.git
 cd LLaVA-NeXT
 ```
 
@@ -132,7 +173,7 @@ python scripts/check_ms_swift_environment.py
 ```
 
 See [the ms-swift installation guide](docs/INSTALL_MS_SWIFT.md) for the
-validated current-stack versions, the `ms-swift` optional extra, PEFT/QLoRA
+historically validated shared-environment versions, the `ms-swift` optional extra, PEFT/QLoRA
 notes, verification commands, and the original-checkpoint route's current
 single-image-per-sample limitation.
 

@@ -5,7 +5,23 @@ existing, shared ms-swift environment. It is designed to preserve the current
 core stack instead of replacing it with the historical versions used by the
 legacy LLaVA-NeXT training pipeline.
 
-The validated profile is:
+## Scope of the recorded validation
+
+The table below preserves the historical shared-environment validation profile;
+it is not the current OmniSpeed environment specification. In particular, the
+Python 3.10 entry records that earlier profile and is not an instruction to
+change OmniSpeed's Python 3.11 environment. For OmniSpeed, follow the
+[main installation guide](https://github.com/EIT-NLP/OmniSpeed/blob/main/docs/guides/installation.md)
+and run its installer from the main repository root.
+
+The compatibility changes described here are supplied by the
+[HarrisonWu42/LLaVA-NeXT fork](https://github.com/HarrisonWu42/LLaVA-NeXT), together
+with the `comp-v4.4.0` branch of the [companion ms-swift fork](https://github.com/HarrisonWu42/ms-swift).
+For OmniSpeed, both revisions are selected by the parent repository's gitlinks.
+The table is preserved as an existing record; this documentation update does not
+claim a new installation or validation run.
+
+The historically validated profile is:
 
 | Component | Validated version |
 | --- | --- |
